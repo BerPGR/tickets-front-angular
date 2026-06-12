@@ -1,59 +1,94 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamsService } from '../../services/teams.service';
 import { Team } from '../../class/team';
-import { CardModule } from 'primeng/card'
-import { ButtonModule } from 'primeng/button'
-import { SelectModule } from 'primeng/select'
-import { FormsModule } from "@angular/forms"
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FloatLabelModule } from 'primeng/floatlabel'
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { ClientsService } from '../../services/clients.service';
 import { Clients } from '../../class/clients';
 import { Users } from '../../class/users';
 import { UsersService } from '../../services/users.service';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea'
 
 @Component({
   selector: 'app-newtickt.component',
-  imports: [CardModule, ButtonModule, FloatLabelModule, FormsModule, CommonModule, SelectModule],
+  imports: [
+    CardModule,
+    TextareaModule,
+    ButtonModule,
+    DatePickerModule,
+    InputTextModule,
+    FloatLabelModule,
+    FormsModule,
+    CommonModule,
+    SelectModule,
+  ],
   templateUrl: './newticket.component.html',
   styleUrl: './newtickt.component.css',
 })
 export class NewTicketComponent implements OnInit {
-  teams: Team[] = []
-  clients: Clients[] = []
-  users: Users[] = []
+  teams: Team[] = [];
+  clients: Clients[] = [];
+  users: Users[] = [];
 
-  newTicket: { selectedTeam: Team | null; dueUser: Users | null } = {
+  priority = [
+    { label: 'Alta', value: 'ALTA' },
+    { label: 'Média', value: 'MEIDA' },
+    { label: 'Baixa', value: 'BAIXA' },
+  ];
+
+  newTicket: {
+    selectedTeam: Team | null;
+    dueUser: Users | null;
+    dueDate: Date | null;
+    priority: {},
+    titulo: string;
+    description: string;
+  } = {
+    titulo: '',
+    description: "",
+    priority: {},
     selectedTeam: null,
     dueUser: null,
-  }
-  
+    dueDate: null,
+  };
+
   constructor(
     private tService: TeamsService,
     private cService: ClientsService,
-    private uService: UsersService
+    private uService: UsersService,
   ) {}
 
   ngOnInit(): void {
     this.tService.fetchTeams().subscribe({
       next: (valor) => {
-        this.teams = [...valor]
+        this.teams = [...valor];
       },
-      error: erro => console.log(erro)
-    })
+      error: (erro) => console.log(erro),
+    });
 
     this.cService.getAll().subscribe({
       next: (clients) => {
-        this.clients = [...clients]
-      }
-    })
+        this.clients = [...clients];
+      },
+    });
+  }
+
+  createNewTicket() {
+    const dueDate = this.newTicket.dueDate;
+    console.log(typeof dueDate?.toISOString().slice(0, 10).replace(/-/g, '/'));
   }
 
   setUsersByClient() {
     this.uService.getAll().subscribe({
       next: (users) => {
-        this.users = users.filter(u => u.team_id === this.newTicket.selectedTeam!.id)
-      }
-    })
+        this.users = users.filter((u) => u.team_id === this.newTicket.selectedTeam!.id);
+      },
+    });
   }
 }

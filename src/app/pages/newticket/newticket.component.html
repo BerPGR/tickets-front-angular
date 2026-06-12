@@ -4,10 +4,10 @@
       <ng-template #title> Criar novo ticket </ng-template>
       <div class="h-[1px] bg-gray-200 w-full my-3"></div>
       <div class="grid md:grid-cols-3 gap-3">
-        <p-floatlabel variant="on"> 
-            <p-select class="w-full" [options]="clients" optionLabel="name" id="on_client">
-            </p-select>
-            <label for="on_client">Cliente</label>
+        <p-floatlabel variant="on">
+          <p-select class="w-full" [options]="clients" optionLabel="name" id="on_client">
+          </p-select>
+          <label for="on_client">Cliente</label>
         </p-floatlabel>
         <p-floatlabel variant="on">
           <p-select
@@ -23,16 +23,67 @@
         </p-floatlabel>
 
         <p-floatlabel variant="on">
-          <p-select [options]="users" class="w-full" optionLabel="name" id="on_due_user" />
+          <p-select
+            [options]="users"
+            [(ngModel)]="newTicket.dueUser"
+            name="dueuser"
+            class="w-full"
+            optionLabel="name"
+            id="on_due_user"
+          />
           <label for="on_due_user">Usuário responsável</label>
+        </p-floatlabel>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-3 mt-10">
+        <p-floatlabel variant="on">
+          <p-datepicker
+            class="w-full"
+            dateFormat="yy/mm/dd"
+            name="duedate"
+            id="on_duedate"
+            [(ngModel)]="newTicket.dueDate"
+          ></p-datepicker>
+          <label for="on_duedate">Prazo</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="on">
+          <p-select
+            class="w-full"
+            id="on_priority"
+            [options]="priority"
+            optionLabel="label"
+            [(ngModel)]="newTicket.priority"
+            name="priority"
+          />
+          <label for="on_priority">Prioridade</label>
         </p-floatlabel>
       </div>
 
       <div class="h-[1px] bg-gray-200 w-full my-3"></div>
 
+      <div class="space-y-5">
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="on_title"
+            [fluid]="true"
+            [(ngModel)]="newTicket.titulo"
+            name="titulo"
+          />
+          <label for="on_title">Titulo</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="on">
+          <textarea pTextarea id="on_description" rows="6" fluid [(ngModel)]="newTicket.description" name="description"></textarea>
+          <label for="on_description">Descrição</label>
+        </p-floatlabel>
+      </div>
+
       <ng-template #footer>
         <div class="flex justify-end gap-4 items-center">
           <p-button
+            (onClick)="createNewTicket()"
             severity="info"
             [raised]="true"
             size="small"
