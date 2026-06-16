@@ -14,12 +14,18 @@ import { UsersService } from '../../services/users.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea'
+import { TagModule } from 'primeng/tag'
+import { DividerComponent } from '../../components/divider/divider.component';
+import { DialogModule } from 'primeng/dialog'
 
 @Component({
   selector: 'app-newtickt.component',
   imports: [
+    DialogModule,
+    DividerComponent,
     CardModule,
     TextareaModule,
+    TagModule,
     ButtonModule,
     DatePickerModule,
     InputTextModule,
@@ -35,6 +41,9 @@ export class NewTicketComponent implements OnInit {
   teams: Team[] = [];
   clients: Clients[] = [];
   users: Users[] = [];
+  tags: string[] = [];
+  visible: boolean = false;
+  tagText: string = "";
 
   priority = [
     { label: 'Alta', value: 'ALTA' },
@@ -79,9 +88,40 @@ export class NewTicketComponent implements OnInit {
     });
   }
 
+  addTag() {
+    if (this.tagText === "") 
+      {
+        return
+      }
+        
+    console.log("chega aqui 2")
+
+    this.tags.push(this.tagText)
+    console.log(this.tags)
+    this.tagText = ""
+    this.visible = false
+  }
+
+  removeTag(tag: string) {
+    const index = this.tags.indexOf(tag)
+
+    if (index !== -1) {
+      this.tags.splice(index, 1)
+    }
+  }
+
+  showTagDialog() {
+    this.visible = true
+  }
+
   createNewTicket() {
     const dueDate = this.newTicket.dueDate;
-    console.log(typeof dueDate?.toISOString().slice(0, 10).replace(/-/g, '/'));
+    const newTicket = {
+      ...this.newTicket,
+      dueDate: dueDate?.toISOString().slice(0, 10).replace(/-/g, '/'),
+      tags: this.tags
+    }
+    
   }
 
   setUsersByClient() {

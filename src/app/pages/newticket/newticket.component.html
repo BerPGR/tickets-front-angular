@@ -2,7 +2,7 @@
   <form class="w-3/4" #frm="ngForm">
     <p-card>
       <ng-template #title> Criar novo ticket </ng-template>
-      <div class="h-[1px] bg-gray-200 w-full my-3"></div>
+      <divider />
       <div class="grid md:grid-cols-3 gap-3">
         <p-floatlabel variant="on">
           <p-select class="w-full" [options]="clients" optionLabel="name" id="on_client">
@@ -75,10 +75,39 @@
         </p-floatlabel>
 
         <p-floatlabel variant="on">
-          <textarea pTextarea id="on_description" rows="6" fluid [(ngModel)]="newTicket.description" name="description"></textarea>
+          <textarea
+            pTextarea
+            id="on_description"
+            rows="6"
+            fluid
+            [(ngModel)]="newTicket.description"
+            name="description"
+          ></textarea>
           <label for="on_description">Descrição</label>
         </p-floatlabel>
+
+        <p-button (onClick)="showTagDialog()" label="Adicionar tag" [raised]="true" />
+        <p-dialog header="Adicionar tag" [modal]="true" [(visible)]="visible">
+          <input pInputText [(ngModel)]="tagText" name="tagText" />
+          <ng-template #footer>
+            <p-button [raised]="true" label="Adicionar" (onClick)="addTag()" size="small" />
+          </ng-template>
+        </p-dialog>
       </div>
+
+      <div class="mt-5">
+        @for (tag of tags; track tag) {
+          <p-tag
+            severity="secondary"
+            class="mr-1 cursor-pointer"
+            (click)="removeTag(tag)"
+            [value]="`#${tag}`"
+            rounded="true"
+          />
+        }
+      </div>
+
+      <divider />
 
       <ng-template #footer>
         <div class="flex justify-end gap-4 items-center">
