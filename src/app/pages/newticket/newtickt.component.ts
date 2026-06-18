@@ -17,6 +17,8 @@ import { TextareaModule } from 'primeng/textarea'
 import { TagModule } from 'primeng/tag'
 import { DividerComponent } from '../../components/divider/divider.component';
 import { DialogModule } from 'primeng/dialog'
+import { TicketService } from '../../services/ticket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-newtickt.component',
@@ -47,12 +49,13 @@ export class NewTicketComponent implements OnInit {
 
   priority = [
     { label: 'Alta', value: 'ALTA' },
-    { label: 'Média', value: 'MEIDA' },
+    { label: 'Média', value: 'MEDIA' },
     { label: 'Baixa', value: 'BAIXA' },
   ];
 
   newTicket: {
     selectedTeam: Team | null;
+    client: Clients | null;
     dueUser: Users | null;
     dueDate: Date | null;
     priority: {},
@@ -63,6 +66,7 @@ export class NewTicketComponent implements OnInit {
     description: "",
     priority: {},
     selectedTeam: null,
+    client: null,
     dueUser: null,
     dueDate: null,
   };
@@ -71,6 +75,8 @@ export class NewTicketComponent implements OnInit {
     private tService: TeamsService,
     private cService: ClientsService,
     private uService: UsersService,
+    private ticketService: TicketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -121,7 +127,13 @@ export class NewTicketComponent implements OnInit {
       dueDate: dueDate?.toISOString().slice(0, 10).replace(/-/g, '/'),
       tags: this.tags
     }
-    
+    this.ticketService.createTicket(newTicket).subscribe({
+      next: (data: any) => {
+        if (data.status === 201) {
+          this.router.navigate(['/'])
+        }
+      }
+    })
   }
 
   setUsersByClient() {
