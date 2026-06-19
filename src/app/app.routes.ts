@@ -5,4 +5,7 @@ export const routes: Routes = [
   { path: '', component: Layout, children: [
     {path: 'new', loadComponent: () => import('./pages/newticket/newtickt.component').then((m) => m.NewTicketComponent)}
   ]},
+  {
+    path: "login", loadComponent: () => import("./pages/auth/auth").then((c) => c.Auth)
+  }
 ];
