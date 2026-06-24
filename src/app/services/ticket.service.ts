@@ -11,4 +11,8 @@ export class TicketService {
     createTicket(ticket: any) {
         return this.http.post(apiUrl + "/tickets", ticket)
     }
+
+    fetchUserTickets(userId: number): Observable<Object[]> {
+        return this.http.get<Object[]>(apiUrl + `/users/${userId}/tickets`)
+    }
 }

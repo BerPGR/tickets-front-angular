@@ -2,6 +2,7 @@ import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import apiUrl from '../utils/apiUrl';
 import { tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode'
 
 @Service()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
         if (!token) return null
         
         try {
-            return JSON.parse(atob(token.split(',')[1]))
+            return jwtDecode(token)
         } catch {
             return null
         }

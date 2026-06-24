@@ -19,6 +19,7 @@ import { DividerComponent } from '../../components/divider/divider.component';
 import { DialogModule } from 'primeng/dialog'
 import { TicketService } from '../../services/ticket.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-newtickt.component',
@@ -76,6 +77,7 @@ export class NewTicketComponent implements OnInit {
     private cService: ClientsService,
     private uService: UsersService,
     private ticketService: TicketService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -99,11 +101,8 @@ export class NewTicketComponent implements OnInit {
       {
         return
       }
-        
-    console.log("chega aqui 2")
 
     this.tags.push(this.tagText)
-    console.log(this.tags)
     this.tagText = ""
     this.visible = false
   }
@@ -121,10 +120,12 @@ export class NewTicketComponent implements OnInit {
   }
 
   createNewTicket() {
+    const user = this.authService.getUser()
     const dueDate = this.newTicket.dueDate;
     const newTicket = {
       ...this.newTicket,
       dueDate: dueDate?.toISOString().slice(0, 10).replace(/-/g, '/'),
+      owner_id: user?.user_id,
       tags: this.tags
     }
     this.ticketService.createTicket(newTicket).subscribe({
