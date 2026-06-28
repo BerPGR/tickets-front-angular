@@ -1,0 +1,19 @@
+.table-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.ticket-count {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-color-secondary);
+}
+
+.empty-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-color-secondary);
+}

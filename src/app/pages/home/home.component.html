@@ -1,1 +1,60 @@
-<p>home.component works!</p>
+<p-card>
+  <p-table
+    [columns]="cols"
+    [value]="userTickets"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    styleClass="p-datatable-striped p-datatable-gridlines"
+    [tableStyle]="{ 'min-width': '80rem' }"
+  >
+    <ng-template #caption>
+      <div class="table-caption">
+        <span>Meus Tickets</span>
+        <span class="ticket-count">{{ userTickets.length }} ticket(s)</span>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+          {{ col.header }}
+          <p-sortIcon [field]="col.field" />
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-ticket>
+      <tr>
+        <td>{{ ticket.id }}</td>
+        <td>{{ ticket.title }}</td>
+        <td>{{ ticket.team }}</td>
+        <td>
+          <p-tag
+            [value]="ticket.status"
+            [severity]="getStatusSeverity(ticket.status)"
+          />
+        </td>
+        <td>{{ ticket.client }}</td>
+        <td>
+          <p-tag
+            [value]="ticket.priority"
+            [severity]="getPrioritySeverity(ticket.priority)"
+          />
+        </td>
+        <td>{{ ticket.due_date | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ ticket.created_at | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ ticket.owner }}</td>
+        <td>{{ ticket.responsable }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td [attr.colspan]="cols.length" class="empty-message">
+          Nenhum ticket encontrado.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
